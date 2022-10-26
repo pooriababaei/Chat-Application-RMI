@@ -1,0 +1,45 @@
+version: "3"
+services:
+  server:
+    build: ./server
+    container_name: server
+    networks:
+      - chat-network
+    ports:
+      - "8080:8080" # listen on port 8080
+    expose:
+     - 8080
+    hostname: server
+#    command: >
+#      /bin/sh -c ""
+
+    stdin_open: true
+    tty: true
+  client1:
+    build: ./client
+    container_name: client1
+    shm_size: 1g
+    networks:
+      - chat-network
+    ports:
+      - "33891:3389" # 3389 is the default port for RDP
+      - "221:22" # ssh
+    stdin_open: true
+    tty: true
+    depends_on:
+      - server
+  client2:
+    build: ./client
+    container_name: client2
+    shm_size: 1g
+    networks:
+      - chat-network
+    ports:
+      - "33892:3389" # 3389 is the default port for RDP
+      - "222:22" # ssh
+    stdin_open: true
+    tty: true
+    depends_on:
+      - server
+networks:
+  chat-network:
